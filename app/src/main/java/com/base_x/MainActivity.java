@@ -23,8 +23,27 @@ public class MainActivity extends AppCompatActivity {
     String input;
     long numberInput;
 
-    int fromInt;
-    int toInt;
+    int fromInt = 10;
+    int toInt = 10;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("fromInt", fromInt);
+        outState.putInt("toInt", toInt);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        fromInt = savedInstanceState.getInt("fromInt");
+        toInt = savedInstanceState.getInt("toInt");
+
+        stateDisplay.setText("base " + fromInt + " to base " + toInt);
+        convert();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
         enterButton = findViewById(R.id.enterButton);
         textView = findViewById(R.id.textView);
         editText = findViewById(R.id.editText);
-
-        fromInt = 10;
-        toInt = 10;
 
         stateDisplay.setText("base " + fromInt + " to base " + toInt);
 
@@ -91,18 +107,21 @@ public class MainActivity extends AppCompatActivity {
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                input = editText.getText().toString();
-                try {
-                    numberInput = Long.parseLong(input, fromInt);
-                    textView.setText(Long.toString(numberInput, toInt));
+                convert();
                 }
-                catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    textView.setText("Invalid number!");
-                }
-            }
         });
 
+    }
+
+    private void convert() {
+        input = editText.getText().toString();
+        try {
+            numberInput = Long.parseLong(input, fromInt);
+            textView.setText(Long.toString(numberInput, toInt));
+        }
+        catch (NumberFormatException e) {
+            e.printStackTrace();
+            textView.setText("Invalid number!");
+        }
     }
 }
